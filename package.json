@@ -1,0 +1,29 @@
+{
+  "name": "postcss-plugin-px2var",
+  "version": "0.1.0",
+  "description": "A plugin for PostCSS that generates var units from multi units.",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ldlh615/postcss-plugin-px2var.git"
+  },
+  "peerDependencies": {
+    "postcss": "^5.0.21"
+  },
+  "keywords": [
+    "px",
+    "css-variable",
+    "postcss",
+    "plugin"
+  ],
+  "author": "ldlh615 <1207893654@qq.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ldlh615/postcss-plugin-px2var/issues"
+  },
+  "homepage": "https://github.com/ldlh615/postcss-plugin-px2var#readme",
+  "files": [
+    "index.js",
+    "package.json"
+  ]
+}
