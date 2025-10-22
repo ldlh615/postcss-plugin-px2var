@@ -3,6 +3,8 @@ const postcss = require('postcss');
 const defaultOpts = {
   include: undefined, // regexp: /keenoho-ui/gi
   cssVariable: '', // css var: --ke-unit
+  cssVariableFallback: undefined, // css var fallback function: (origin, num, unit) => { return origin }
+  cssVariableFallbackOrigin: false, // fallback to origin if cssVariableFallback is not set
   selectorBlackList: [],
   propBlackList: [],
   ignoreIdentifier: false,
@@ -80,7 +82,13 @@ module.exports = postcss.plugin('postcss-plugin-px2var', function (options) {
 
       // start process value
       const value = decl.value.replace(pxRegex, (_, num, px) => {
-        return `calc(${num}*var(${opts.cssVariable}))`;
+        if (typeof opts.cssVariableFallback === 'function') {
+          return `calc(${num}*var(${opts.cssVariable},${opts.cssVariableFallback(_, num, px)}))`;
+        } else if (opts.cssVariableFallbackOrigin) {
+          return `calc(${num}*var(${opts.cssVariable},${_}))`;
+        } else {
+          return `calc(${num}*var(${opts.cssVariable}))`;
+        }
       });
 
       // replace or insert value

@@ -28,6 +28,8 @@ const css = fs.readFileSync('src/styles/app.css', 'utf8');
 const options = {
   include: /my-project\/(src|styles)/i, // required: only files matching this regex are processed
   cssVariable: '--ke-unit', // required: the CSS variable to multiply by
+  cssVariableFallback: (origin, num, unit) => origin, // optional: css var fallback function: (origin, num, unit) => { return origin }
+  cssVariableFallbackOrigin: false, // optional: fallback to origin if cssVariableFallback is not set
   replace: true, // replace in-place; if false, add a cloned declaration after
   selectorBlackList: [/^\.no-scale/], // optional: selectors to skip
   propBlackList: ['border-width'], // optional: properties to skip
@@ -54,7 +56,7 @@ h1 {
 
 /* output (with cssVariable: --ke-unit, propBlackList: ['border-width']) */
 h1 {
-  margin: 0 0 calc(20 * var(--ke-unit));
+  margin: 0 0 calc(20 * var(--ke-unit, 32px));
   font-size: 32px; /* no-px */
   line-height: 1.2;
   border-width: 1px;
@@ -73,6 +75,8 @@ Notes:
 {
   include: undefined,        // RegExp (required): processed only if file path matches
   cssVariable: '',           // String (required): e.g. '--ke-unit'
+  cssVariableFallback: undefined, // Function (optional): css var fallback function: (origin, num, unit) => { return origin }
+  cssVariableFallbackOrigin: false, // Boolean: fallback to origin if cssVariableFallback is not set
   selectorBlackList: [],     // Array<String|RegExp>: selectors to skip
   propBlackList: [],         // Array<String|RegExp>: properties to skip
   ignoreIdentifier: false,   // String|false: token to mark declaration to skip
@@ -82,6 +86,8 @@ Notes:
 
 - `include` RegExp matched against the absolute file path. If not set or doesn't match, no changes are made.
 - `cssVariable` The CSS variable name used in `calc`, e.g. `--ke-unit`.
+- `cssVariableFallback` Optional fallback function for CSS variable. If not set, `origin` is returned.
+- `cssVariableFallbackOrigin` Optional fallback to origin if `cssVariableFallback` is not set. Defaults to `false`.
 - `selectorBlackList` Skip rules whose selector matches any string (substring) or RegExp.
 - `propBlackList` Skip declarations whose property matches any string (substring) or RegExp.
 - `ignoreIdentifier` When set to a string token (e.g. `'no-px'`), skip declarations that contain this token in the value or have it as the next sibling comment.
@@ -97,6 +103,8 @@ module.exports = {
     require('postcss-plugin-px2var')({
       include: /my-project\/(src|styles)/i,
       cssVariable: '--ke-unit',
+      cssVariableFallback: (origin, num, unit) => origin,
+      cssVariableFallbackOrigin: false,
       selectorBlackList: [/^\.no-scale/],
       propBlackList: ['border-width'],
       ignoreIdentifier: 'no-px',
