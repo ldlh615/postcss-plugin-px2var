@@ -2,6 +2,6 @@ HISTORY
 
 ---
 
-### 0.1.0 - 2016/6/23
+### 0.1.1 - 2016/6/23
 
-- feat: init project
+- feat: update project dependencies
